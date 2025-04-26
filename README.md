@@ -1,36 +1,44 @@
-Project Group #16 Members Christopher Johnson (joh18725) Carlos Chasi-Mejia (chasi009)
+Overview
 
-Lab machine: csel-kh250-10.cselabs.umn.edu
+This project implements a parallelized Merkle Tree hashing algorithm for secure file integrity verification. Merkle Trees (hash trees) enable efficient and tamper-evident verification of large datasets by representing file contents as a binary tree of cryptographic hashes. This project simulates a real-world system used in blockchain technologies, version control systems, and distributed storage.
 
-Changes made in utils.c
+Features
 
-Contributions: work done by both carlos and chris
-carlos did most of the forking, merkle.c and good amount of utils.c and child_process
-chris did most of the file creation and reading and hashing and good amount in child_process.c also did error handling
+- Merkle Tree Construction: Builds a complete binary Merkle Tree from fixed-size data chunks.
 
-No changes made to Makefile
+- Parallel Processing: Uses parent-child process creation to compute hash values for tree nodes in parallel.
 
-No extra assumptions made 
+- Cryptographic Security: Ensures file integrity using SHA-based hashing at each level of the tree.
 
-//design to make merkle tree
-In merkle read in arguments for N and filename 
-then partition the input file to create blocks folder 
-then create first child process that will start the program 
-child_process with child_id parameter as 0 
+- Process Synchronization: Coordinates multiple processes using fork() and synchronization primitives for efficient computation.
 
-Once in child_process 
-read in command arguments for n and child_id 
-then checks if child_id is leaf or non leaf
-if leaf then creates hashes.out file with associated .out file and then hash associated block file and write it into the hashes.out file and close it and exit program 
+How It Works
 
-if non leaf process, create new left child process using fork, and make it run program (execv) child_process with correct child_id. Then create right_child and do the same as left child. 
+- File is split into equal-sized chunks (data blocks).
 
-Then parent process of these childrens will wait for both the child processes. After this, open left and right hash files and read in data and compute_dual_hash to open and wrtite into parent's hashfile 
+- Each chunk is hashed to form a leaf node.
 
-//only thing that really changed from intermediate submission was running child program right after creating child instead of creating both children first and then running program
+- Parent nodes recursively hash pairs of child hashes to form the tree up to a single root.
 
-No AI helper tools were used 
+- The root hash can be used to verify the integrity of any chunk without reprocessing the entire file.
 
+
+How To Run:
+
+You can create all of the necessary executable files with
+```
+$ make all
+```
+
+Running the program can be accomplished with
+```
+$ ./merkle input/T1.txt 8
+```
+
+The Makefile contains three tests (T1, T2, T3). After running “make all” or “make inter”, you can run these test cases like such:
+```
+$ make t1
+```
 
 
 
